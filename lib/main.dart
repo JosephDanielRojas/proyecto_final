@@ -264,7 +264,7 @@ class _DemoAppState extends State<DemoApp> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SecondRoute()));
                 },
-                child: const Text("Volver")),
+                child: const Text("Información")),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -273,7 +273,7 @@ class _DemoAppState extends State<DemoApp> {
                           builder: (context) =>
                               const CalRoute(tittle: 'Calendario de tareas')));
                 },
-                child: const Text("Volver")),
+                child: const Text("Calendario")),
           ],
         ),
       ),
@@ -432,8 +432,8 @@ class CalRoute extends StatelessWidget {
     return SfCalendar(
       view: CalendarView.week,
       firstDayOfWeek: 6,
-      //initialDisplayDate: DateTime(2021, 03, 01, 08, 30),
-      //initialSelectedDate: DateTime(2021, 03, 01, 08, 30),
+      initialDisplayDate: DateTime(2021, 03, 01, 08, 30),
+      initialSelectedDate: DateTime(2021, 03, 01, 08, 30),
       dataSource: MeetingDataSource(getAppointments()),
     );
   }
