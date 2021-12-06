@@ -4,7 +4,7 @@ import 'package:proyecto_final/api_service.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:syncfunsion_flutter_calender/cal';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'info.dart';
 
 void main() => runApp(MyApp());
@@ -267,8 +267,11 @@ class _DemoAppState extends State<DemoApp> {
                 child: const Text("Volver")),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CalenderRoute()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const CalRoute(tittle: 'Calendario de tareas')));
                 },
                 child: const Text("Volver")),
           ],
@@ -405,30 +408,57 @@ class SecondRoute extends StatelessWidget {
   }
 
   getData(
-    Info data,
+    List<Info> data,
     TextEditingController id,
     TextEditingController nam,
     TextEditingController tar,
   ) {
-    id.text = data.api.toString();
-    nam.text = data.name.toString();
-    tar.text = data.tarea.toString();
+    id.text = data.first.api.toString();
+    nam.text = data.first.name.toString();
+    tar.text = data.first.tarea.toString();
   }
 
   // ignore: non_constant_identifier_names
   static ApiService() {}
 }
 
-class CalenderRoute extends StatefulWidget {
-  const CalenderRoute({Key? key}) : super(key: key);
+class CalRoute extends StatelessWidget {
+  const CalRoute({Key? key, required this.tittle}) : super(key: key);
 
-  @override
-  _CalenderRouteState createState() => _CalenderRouteState();
-}
+  final String tittle;
 
-class _CalenderRouteState extends State<CalenderRoute> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return SfCalendar(
+      view: CalendarView.week,
+      firstDayOfWeek: 6,
+      //initialDisplayDate: DateTime(2021, 03, 01, 08, 30),
+      //initialSelectedDate: DateTime(2021, 03, 01, 08, 30),
+      dataSource: MeetingDataSource(getAppointments()),
+    );
+  }
+}
+
+List<Appointment> getAppointments() {
+  List<Appointment> meetings = <Appointment>[];
+  final DateTime today = DateTime.now();
+  final DateTime startTime =
+      DateTime(today.year, today.month, today.day, 9, 0, 0);
+  final DateTime endTime = startTime.add(const Duration(hours: 2));
+
+  meetings.add(Appointment(
+      startTime: startTime,
+      endTime: endTime,
+      subject: 'Board Meeting',
+      color: Colors.blue,
+      recurrenceRule: 'FREQ=DAILY;COUNT=10',
+      isAllDay: false));
+
+  return meetings;
+}
+
+class MeetingDataSource extends CalendarDataSource {
+  MeetingDataSource(List<Appointment> source) {
+    appointments = source;
   }
 }
